@@ -1,3 +1,4 @@
+from app.models import Product
 from app import app
 
 @app.route('/')
@@ -17,7 +18,9 @@ def product(product_id):
 def author():
     pass
 
-@app.route('/extract')
-def extract():
-    pass
+@app.route('/extract/<product_id>')
+def extract(product_id):
+    product = Product(product_id)
+    product.extract_opinions().analyze().export_to_json()
+    return str(product)
 

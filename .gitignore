@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE
+.vscode
+
+# extracted products
+app/products/*
