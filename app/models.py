@@ -9,11 +9,17 @@ class Product:
     def __init__(self, product_id, product_name = None, opinions = [], opinions_count = None, pros_count = None, cons_count = None, average_score = None):
         self.product_id = product_id
         self.product_name = product_name
-        self.opinions = opinions
+        self.opinions = opinions.copy()
         self.opinions_count = opinions_count
         self.pros_count = pros_count
         self.cons_count = cons_count
         self.average_score = average_score
+
+    def extract_name(self):
+        response = requests.get(f"https://www.ceneo.pl/{self.product_id}#tab=reviews")
+        if response.status_code == 200:
+            page_dom = BeautifulSoup(response.text, 'html.parser')
+            self.product_name = get_component(page_dom, ".js_product-h1-link")
 
     def extract_opinions(self):
         page = 1
