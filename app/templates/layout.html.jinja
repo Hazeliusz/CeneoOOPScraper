@@ -11,35 +11,25 @@
         <title>Ceneo Web Scraper</title>
     </head>
     <body>
-        <header class="container text-center">
-        <h1>Ceneo Web Scraper</h1>
+        <header class="container alert alert-primary">
+            <ul class="nav justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Strona główna</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('extract') }}">Pobierz produkt</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('products') }}">Lista produktów</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('author') }}">O autorze</a>
+                </li>
+            </ul>
         </header>
-         <nav class="container navbar navbar-expand-lg navbar-light" style="background-color: #cfe2ff;">
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Strona główna</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('extract') }}">Pobierz produkt</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('products') }}">Lista produktów</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('author') }}">O autorze</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
          <div class="container">
             <div class="row">
-                <div class="col-3">
-                {% block left %}
-                
-                {% endblock left %}
-                </div>
-                <div class="col-9">
+                <div>
                 {% block middle %}
                     <h2>To jest plik layout</h2>
                 {% endblock middle %}
@@ -47,8 +37,8 @@
             </div>
         </div>
 
-        <footer class="container fixed-bottom alert alert-primary">
-
+        <footer class="container alert alert-primary">
+        Jan Gajewski s218400 Informatyka Stosowana ZZISS1-1211
         </footer>
         
         <!-- Bootstrap Bundle with Popper -->

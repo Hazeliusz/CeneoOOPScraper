@@ -1,5 +1,20 @@
 {% extends "layout.html.jinja" %}
 
 {% block middle %}
-    {{ product }}
+    <ul>
+    {% for product in products %}
+    <li>
+        <a href="{{ url_for('product', product_id=product.product_id) }}">{{ product.product_name}}</a><br>
+        <ul>
+            <li>Liczba opinii: {{ product.opinions_count }}</li>
+            <li>Liczba zalet: {{ product.pros_count }}</li>
+            <li>Liczba wad: {{ product.cons_count }}</li>
+            <li>Średnia ocena: {{ product.average_score}}</li>
+            <li>Pobierz jako: <a href="{{ url_for('download_csv', product_id=product.product_id) }}">CSV</a>,
+            <a href="{{ url_for('download_json', product_id=product.product_id) }}">JSON</a>,
+            <a href="{{ url_for('download_xlsx', product_id=product.product_id) }}">XLSX</a></li>
+        </ul>
+    </li>
+    {% endfor %}
+    </ul>
 {% endblock middle %}

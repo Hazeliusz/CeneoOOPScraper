@@ -1,5 +1,26 @@
 {% extends "layout.html.jinja" %}
 
 {% block middle %}
-    <h2>Opis projektu</h2>
+    <h1>Opis projektu</h1>
+    <h2>Cel aplikacji</h2>
+    <div style="text-align: justify">
+    Celem aplikacji jest pobieranie opinii ze strony Ceneo.pl o produktach na podstawie ich identyfikatorów numerycznych, a następnie na ich podstawie
+    wyświetlanie informacji i podstawowych statystyk na ich temat.
+    </div>
+    <h2>Działanie</h2>
+    <div style="text-align: justify">
+    Aplikacja posiada 4 podstrony - stronę główną (widoczną w tej chwili), stronę ekstrakcji produktu, listę produktów oraz sekcję informacji o autorze.
+    Aby uzyskać informację o produkcie należy przejść do strony ekstrakcji produktu, podać kod wybranego produktu w formularzu, a następnie kliknąć przycisk "Pobierz".
+    Po kliknięciu zostaniemy przekierowani na stronę zawierającą informacje - u samej góry na temat samego produktu, niżej zaś opinii na jego temat. Pozostałe strony mają
+    charakter statyczny.
+    </div>
+    <h2>Zastosowane biblioteki</h2>
+    <div style="text-align: justify">
+    Do stworzenia interfejsu webowego wykorzystano mikroframework Flask wraz z silnikiem szablonów Jinja. Do ekstrakcji danych ze strony wykorzystano bibliotekę BeutifulSoup4.
+    Do analizy zebranych danych wykorzystano bilbiotekę Pandas. Poza tym w czasie analizy i porządkowania danych wykorzystano bilbioteki requests, json i re.
+    </div>
+    <h2>Zastosowane podejścia</h2>
+    <div style="text-align: justify">
+    W tworzeniu aplikacji wykorzystano podejście zorientowane obiektowo. 
+    </div>
 {% endblock middle %}

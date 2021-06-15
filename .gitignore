@@ -133,3 +133,4 @@ dmypy.json
 
 # extracted products
 app/products/*
+app/meta/*

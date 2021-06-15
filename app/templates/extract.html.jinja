@@ -8,22 +8,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
-    <form method="POST" action="{{ url_for">
-        <div class="row g-3 align-items-center">
-            <div class="col-auto">
-                <label for="product_id" class="col-form-label">Kod produktu</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" required="" id="product_id" name="product_id" placeholder="Wpisz kod produktu" class="form-control" aria-describedby="passwordHelpInline">
-            </div>
-            <div class="col-auto">
-                <span id="passwordHelpInline" class="form-text">
-                    Kod produktu musi mieć 8-10 cyfr.
-                </span>
-            </div>
-            <div class="col-auto">
-                <input type="submit" class="btn btn-warning" value="Pobierz">
-            </div>
-        </div>
+    <form class="row g-3" method="POST">
+    <div class="col-auto">
+        <label for="product_id" class="form-control-plaintext">Podaj kod produktu</label>
+    </div>
+    <div class="col-auto">
+        <input type="text" class="form-control" id="product_id" name="product_id" placeholder="Kod produktu" required>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Pobierz</button>
     </form>
 {% endblock middle %}

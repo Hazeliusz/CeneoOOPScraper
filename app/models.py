@@ -1,5 +1,8 @@
+from matplotlib import pyplot as plt
 from app.utils import get_component
 from bs4 import BeautifulSoup
+import pandas as pd
+import numpy as np
 import requests
 import json
 import re
@@ -82,16 +85,39 @@ class Product:
 
     def analyze(self):
         self.opinions_count = len(self.opinions)
-        # self.pros_count = self.opinions.pros.map(bool).sum()
-        # self.cons_count = self.opinions.cons.map(bool).sum()
-        # self.average_score = self.opinions.stars.mean()
+        opinions_dict = []
+        for opinion in self.opinions:
+            opinions_dict.append(opinion.to_dict())
+        dataframe = pd.DataFrame(opinions_dict)
+        self.pros_count = int(dataframe.pros.map(bool).sum())
+        self.cons_count = int(dataframe.cons.map(bool).sum())
+        self.average_score = dataframe.stars.mean()
         return self
 
-    def get_bar_chart(self):
+    def create_bar_chart(self):
         pass
 
-    def get_pie_chart(self):
-        pass
+    def create_pie_chart(self):
+        opinions = []
+        for opinion in self.opinions:
+            opinions.append(opinion.to_dict())
+        dataframe = pd.DataFrame(opinions)
+        recommendations = dataframe.recommendation.value_counts(dropna = False).sort_index()
+        print(recommendations)
+        plt.figure(figsize = (7, 4))
+        recommendations.plot.pie(
+            label = "",
+            labels = ['Don\'t recommend', 'Recommend', 'No data'],
+            colors = ['crimson', 'forestgreen', 'lightblue'],
+            autopct = "%1.1f%%",
+            pctdistance = 1.2,
+            labeldistance = 1.4
+        )
+        plt.title("Share of recommendations in opinions")
+        plt.legend(bbox_to_anchor=(1.0, 1.0))
+        plt.tight_layout()
+        plt.savefig(f"app/figures/{self.product_id}_pie.png")
+        plt.close()
 
 
 class Opinion:
@@ -136,12 +162,12 @@ class Opinion:
         self.uselessness = int(self.uselessness)
         self.content = re.sub("\\s", " ", self.content)
         self.stars = float(self.stars.split("/")[0].replace(",", "."))
-        self.recommendation = True if self.recommendation == "Polcam" else False if self.recommendation == "Nie polecam" else None
+        self.recommendation = True if self.recommendation == "Polecam" else False if self.recommendation == "Nie polecam" else None
         self.verified = bool(self.verified)
         return self
 
     def to_dict(self):
-        return {key: getattr(self, key) # -> Pyton3.7 :< {"opinion_id": self.opinion_id} | {key: getattr(self, key)
+        return {"opinion_id": self.opinion_id} | {key: getattr(self, key)
         for key in self.selectors.keys()}
 
     def __str__(self) -> str:
