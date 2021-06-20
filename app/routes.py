@@ -38,6 +38,8 @@ def extract():
             return render_template("extract.html.jinja", error="Podana wartość nie jest poprawnym kodem produktu.")
         else:
             product.extract_opinions().analyze().export_to_json()
+            product.create_pie_chart()
+            product.create_bar_chart()
             return redirect(url_for('product', product_id=product_id))
     return render_template("extract.html.jinja")
 
@@ -76,7 +78,4 @@ def download_xlsx(product_id):
 
 @app.route('/chart/<product_id>')
 def chart(product_id):
-    product = Product(product_id)
-    product.import_from_json()
-    product.create_pie_chart()
-    return render_template('charts.html.jinja')
+    return render_template('charts.html.jinja', product_id=product_id)

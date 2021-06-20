@@ -1,5 +1,9 @@
 {% extends "layout.html.jinja" %}
 
 {% block middle %}
-    
+    <img src="{{ url_for('static', filename = 'figures/' + product_id + '_pie.png') }}">
+    <img src="{{ url_for('static', filename = 'figures/' + product_id + '_bar.png') }}">
+    <h2>
+    <a href="{{ url_for('product', product_id=product_id) }}">Powrót do strony produktu</a>
+    </h2>
 {% endblock middle %}

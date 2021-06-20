@@ -10,47 +10,40 @@
     Liczba zalet: {{ product.pros_count }}<br>
     Liczba wad: {{ product.cons_count }}<br>
     Średnia ocena: {{ product.average_score }}<br>
+    <a href="{{ url_for('chart', product_id=product.product_id) }}">Wykresy</a><br>
     Opinie: <br>
-    <ul>
-    {% for opinion in product.opinions %}
-    <li>Identyfikator opinii: {{ opinion.opinion_id }}<br>
-        <ul>
-            <li>Autor: {{ opinion.author }}</li>
-            {% if opinion.recommendation != None %}
-            <li>Rekomendacja: {% if opinion.recommendation %} Polecam {% else %} Nie polecam {% endif %}</li>
-            {% endif %}
-            <li>Ocena: {{ opinion.stars }}</li>
-            <li>Potwierdzona zakupem: {% if opinion.verified %} Tak {% else %} Nie {% endif %}</li>
-            <li>Data wystawienia opinii: {{ opinion.post_date }}</li>
-            {% if opinion.purchase_date != None %}
-            <li>Data zakupu: {{ opinion.purchase_date }}</li>
-            {% endif %}
-            <li>Przydatna: {{ opinion.usefulness }}</li>
-            <li>Nieprzydatna: {{ opinion.uselessness }}</li>
-            <li>Treść opinii: <br>{{ opinion.content }}</li>
-            {% if opinion.pros|length > 0 %}
-            <li>Zalety: <br>
-                <ul>
-                {% for pro in opinion.pros %}
-                    <li>{{pro}}</li>
-                {% endfor%}
-                </ul>
-            </li>
-            {% endif %}
-            {% if opinion.cons|length > 0 %}
-            <li> Wady: <br>
-                <ul>
-                    {% for con in opinion.cons %}
-                    <li>{{con}}</li>
-                    {% endfor%}
-                </ul>
-            </li>
-            {% endif %}
-        </ul>
-    </li>
-    {% endfor %}
-    </ul>
     </div>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Autor</th>
+        <th scope="col">Rekomendacja</th>
+        <th scope="col">Ocena</th>
+        <th scope="col">Potwierdzona zakupem</th>
+        <th scope="col">Data wystawienia</th>
+        <th scope="col">Data zakupu</th>
+        <th scope="col">Przydatna</th>
+        <th scope="col">Nieprzydatna</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for opinion in product.opinions|sort(attribute='opinion') %}
+        <tr>
+            <td>{{opinion.opinion_id}}</td>
+            <td>{{ opinion.author }}</td>
+            <td>{% if opinion.recommendation %} Polecam {% elif opinion.recommendation == False %} Nie polecam {% else %} Brak {% endif %}</td>
+            <td>{{ opinion.stars }}</td>
+            <td>{% if opinion.verified %} Tak {% else %} Nie {% endif %}</td>
+            <td>{{ opinion.post_date }}</td>
+            <td>{% if opinion.purchase_date %} {{opinion.purchase_date}} {% else %}Brak{% endif %}</td>
+            <td>{{ opinion.usefulness }}</td>
+            <td>{{ opinion.uselessness }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    <div>
     <h2>
         Pobierz jako: <a href="{{ url_for('download_csv', product_id=product.product_id) }}">CSV</a>,
             <a href="{{ url_for('download_json', product_id=product.product_id) }}">JSON</a>,

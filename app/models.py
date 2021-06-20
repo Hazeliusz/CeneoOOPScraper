@@ -95,7 +95,21 @@ class Product:
         return self
 
     def create_bar_chart(self):
-        pass
+        opinions = []
+        for opinion in self.opinions:
+            opinions.append(opinion.to_dict())
+        dataframe = pd.DataFrame(opinions)
+        stars = dataframe.stars.value_counts().reindex(np.arange(0, 5.5, 0.5), fill_value = 0)
+        stars.plot.bar(
+            color = 'lightskyblue'
+        )
+        for index, value in enumerate(stars):
+            plt.text(index, value+2, str(value), ha = 'center')
+        plt.xlabel("Rating")
+        plt.ylabel("Number of opinions")
+        plt.title("Frequency of ratings")
+        plt.savefig(f"app/static/figures/{self.product_id}_bar.png")
+        plt.close()
 
     def create_pie_chart(self):
         opinions = []
@@ -103,20 +117,16 @@ class Product:
             opinions.append(opinion.to_dict())
         dataframe = pd.DataFrame(opinions)
         recommendations = dataframe.recommendation.value_counts(dropna = False).sort_index()
-        print(recommendations)
-        plt.figure(figsize = (7, 4))
         recommendations.plot.pie(
             label = "",
-            labels = ['Don\'t recommend', 'Recommend', 'No data'],
-            colors = ['crimson', 'forestgreen', 'lightblue'],
+            colors = ['lightblue', 'crimson', 'forestgreen'],
             autopct = "%1.1f%%",
             pctdistance = 1.2,
             labeldistance = 1.4
         )
         plt.title("Share of recommendations in opinions")
         plt.legend(bbox_to_anchor=(1.0, 1.0))
-        plt.tight_layout()
-        plt.savefig(f"app/figures/{self.product_id}_pie.png")
+        plt.savefig(f"app/static/figures/{self.product_id}_pie.png")
         plt.close()
 
 
