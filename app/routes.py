@@ -32,7 +32,6 @@ def product(product_id):
         for opinion in product.opinions:
             opinions.append(opinion.to_dict())
         dataframe = pd.DataFrame(opinions)
-        print(request.form)
         if len(request.form['sortby']) > 0:
             dataframe = dataframe.sort_values(by=[request.form['sortby']])
             if len(request.form['descending']) != 0:
