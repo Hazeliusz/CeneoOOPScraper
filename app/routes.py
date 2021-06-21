@@ -18,11 +18,71 @@ def products():
         products.append(Product(int(file[:-5])).import_from_json())
     return render_template("products.html.jinja", products=products)
 
-@app.route('/product/<product_id>')
+@app.route('/product/<product_id>', methods=['POST', 'GET'])
 def product(product_id):
-    product = Product(product_id)
-    product.import_from_json()
-    return render_template("product.html.jinja", product=product)
+    if request.method == 'GET':
+        product = Product(product_id)
+        product.import_from_json()
+        return render_template("product.html.jinja", product=product, opinions=product.opinions)
+    elif request.method == 'POST':
+        product = Product(product_id)
+        product.import_from_json()
+        opinions = []
+        error = 0
+        for opinion in product.opinions:
+            opinions.append(opinion.to_dict())
+        dataframe = pd.DataFrame(opinions)
+        print(request.form)
+        if len(request.form['sortby']) > 0:
+            dataframe = dataframe.sort_values(by=[request.form['sortby']])
+            if len(request.form['descending']) != 0:
+                dataframe = dataframe.iloc[::-1]
+        if request.form['recommendations'] != "recommend_all":
+            if request.form['recommendations'] == "recommended":
+                dataframe = dataframe.loc[dataframe['recommendation'] == True]
+            elif request.form['recommendations'] == "not_recommended":
+                dataframe = dataframe.loc[dataframe['recommendation'] == False]
+            elif request.form['recommendations'] == "recommended_both":
+                dataframe = dataframe.loc[dataframe['recommendation'] != None]
+        if len(request.form['stars_higher']) != 0:
+            try:
+                dataframe = dataframe.loc[dataframe['stars'] > float(request.form['stars_higher_than'])]
+            except ValueError:
+                error = "Do formularza wprowadzono niepoprawne dane."
+        if len(request.form['stars_lower']) != 0:
+            try:
+                dataframe = dataframe.loc[dataframe['stars'] < float(request.form['stars_lower_than'])]
+            except ValueError:
+                error = "Do formularza wprowadzono niepoprawne dane."
+
+        if request.form['verified'] != "verified_all":
+            if request.form['verified'] == "verified":
+                dataframe = dataframe.loc[dataframe['verified'] == True]
+            else:
+                dataframe = dataframe.loc[dataframe['verified'] == False]
+
+        if len(request.form['useful_higher']) != 0:
+            try:
+                dataframe = dataframe.loc[dataframe['usefulness'] > int(request.form['useful_higher_than'])]
+            except ValueError:
+                error = "Do formularza wprowadzono niepoprawne dane."
+        if len(request.form['useful_lower']) != 0:
+            try:
+                dataframe = dataframe.loc[dataframe['usefulness'] < int(request.form['useful_lower_than'])]
+            except ValueError:
+                error = "Do formularza wprowadzono niepoprawne dane."
+
+        if len(request.form['uselessness_higher']) != 0:
+            try:
+                dataframe = dataframe.loc[dataframe['uselessness'] > int(request.form['uselessness_higher_than'])]
+            except ValueError:
+                error = "Do formularza wprowadzono niepoprawne dane."
+        if len(request.form['uselessness_lower']) != 0:
+            try:
+                dataframe = dataframe.loc[dataframe['uselessness'] < int(request.form['uselessness_lower_than'])]
+            except ValueError:
+                error = "Do formularza wprowadzono niepoprawne dane."
+        return render_template("product.html.jinja", product=product, opinions = dataframe.to_dict('records'), error=error)
 
 @app.route('/author')
 def author():

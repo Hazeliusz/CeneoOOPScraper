@@ -36,7 +36,16 @@
                 </div>
             </div>
         </div>
-
+        {% block table %}
+        {% endblock table%}
+        <div class="container">
+            <div class="row">
+                <div>
+                {% block lower %}
+                {% endblock lower %}
+                </div>
+            </div>
+        </div>
         <footer class="container alert alert-primary">
         Jan Gajewski s218400 Informatyka Stosowana ZZISS1-1211
         </footer>

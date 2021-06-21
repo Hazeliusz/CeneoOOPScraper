@@ -13,6 +13,8 @@
     <a href="{{ url_for('chart', product_id=product.product_id) }}">Wykresy</a><br>
     Opinie: <br>
     </div>
+{% endblock middle %}
+{% block table %}
     <table class="table">
     <thead>
         <tr>
@@ -28,7 +30,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for opinion in product.opinions|sort(attribute='opinion') %}
+    {% for opinion in opinions %}
         <tr>
             <td>{{opinion.opinion_id}}</td>
             <td>{{ opinion.author }}</td>
@@ -43,10 +45,103 @@
     {% endfor %}
     </tbody>
     </table>
+{% endblock table %}
+{% block lower %}
     <div>
     <h2>
         Pobierz jako: <a href="{{ url_for('download_csv', product_id=product.product_id) }}">CSV</a>,
             <a href="{{ url_for('download_json', product_id=product.product_id) }}">JSON</a>,
             <a href="{{ url_for('download_xlsx', product_id=product.product_id) }}">XLSX</a>
     </h2>
-{% endblock middle %}
+    <form method="post">
+        <legend>Sortowanie</legend>
+        <label class="form-label">Sortuj według</label>
+        <select class="form-select" name="sortby" aria-label="Default select example">
+            <option value ="" selected>Kolejność na Ceneo</option>
+            <option value="opinion_id">ID</option>
+            <option value="author">Autor</option>
+            <option value="recommendation">Rekomendacja</option>
+            <option value="stars">Ocena</option>
+            <option value="verified">Potwierdzona zakupem</option>
+            <option value="post_date">Data wystawienia</option>
+            <option value="purchase_date">Data zakupu</option>
+            <option value="usefulness">Przydatność</option>
+            <option value="uselessness">Nieprzydatność</option>
+        </select>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="descending" id="flexCheckDefault">
+            <input class="form-check-input" type="hidden" value="" name="descending" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+                Sortuj malejąco
+            </label>
+        </div><br>
+        <legend>Filtry</legend>
+        <label class="form-label">Polecane</label>
+        <select class="form-select" name="recommendations" aria-label="Default select example">
+            <option value="recommended_all" selected>Wszystkie</option>
+            <option value="recommended">Polecam</option>
+            <option value="not_recommended">Nie polecam</option>
+            <option value="recommended_both">Polecam/Nie polecam</option>
+        </select>
+        <label class="form-label">Ocena</label>
+        <div class="input-group mb-3">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" name="stars_higher" value="true" aria-label="Checkbox for following text input">
+                <input class="form-check-input mt-0" type="hidden" name="stars_higher" value="" aria-label="Checkbox for following text input">
+            </div>
+            <input type="text" placeholder="Ocena większa niż" name="stars_higher_than" class="form-control" aria-label="Text input with checkbox">
+            </div>
+
+            <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" name="stars_lower" value="true" aria-label="Checkbox for following text input">
+                <input class="form-check-input mt-0" type="hidden" name="stars_lower" value="" aria-label="Checkbox for following text input">
+            </div>
+            <input type="text" class="form-control" name="stars_lower_than" placeholder="Ocena mniejsza niż" aria-label="Text input with radio button">
+        </div>
+        <label class="form-label">Potwierdzona zakupem</label>
+        <select class="form-select" name="verified" aria-label="Default select example">
+            <option value ="verified_all" selected>Wszystkie</option>
+            <option value="verified">Potwierdzone</option>
+            <option value="unverified">Niepotwierdzone</option>
+        </select>
+        <label class="form-label">Przydatność</label>
+        <div class="input-group mb-3">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" value="true" name="useful_lower" aria-label="Checkbox for following text input">
+                <input class="form-check-input mt-0" type="hidden" value="" name="useful_lower" aria-label="Checkbox for following text input">
+            </div>
+                <input type="text" placeholder="Mniej użyteczne niż" name="useful_lower_than" class="form-control" aria-label="Text input with checkbox">
+            </div>
+            <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" name="useful_higher" value="true" aria-label="Checkbox for following text input">
+                <input class="form-check-input mt-0" type="hidden" name="useful_higher" value="" aria-label="Checkbox for following text input">
+            </div>
+            <input type="text" class="form-control" name="useful_higher_than" placeholder="Bardziej użyteczne niż" aria-label="Text input with radio button">
+        </div>
+        <label class="form-label">Nieprzydatność</label>
+        <div class="input-group mb-3">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" value="true" name="uselessness_lower" aria-label="Checkbox for following text input">
+                <input class="form-check-input mt-0" type="hidden" value="" name="uselessness_lower" aria-label="Checkbox for following text input">
+            </div>
+            <input type="text" placeholder="Mniej użyteczne niż" name="uselessness_lower_than" class="form-control" aria-label="Text input with checkbox">
+            </div>
+
+            <div class="input-group">
+            <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" name="uselessness_higher" value="true" aria-label="Checkbox for following text input">
+                <input class="form-check-input mt-0" type="hidden" name="uselessness_higher" value="" aria-label="Checkbox for following text input">
+            </div>
+            <input type="text" class="form-control" name="uselessness_higher_than" placeholder="Bardziej użyteczne niż" aria-label="Text input with radio button">
+        </div>
+        <br><button type="submit" class="btn btn-primary">Zastosuj</button>
+    </form>
+    </div>
+    {% if error %}
+    <div>
+    {{error}}
+    </div>
+    {% endif %}
+{% endblock lower %}
